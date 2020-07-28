@@ -2,12 +2,13 @@ import numpy as np
 import cv2
 from .aruco import ArUco
 from .warping import warping
-from .segmentation import find_length
+from .segmentation import find_length, KMeansSeg
 
 
 class FindPatch():
     def __init__(self):
         self.aruco = ArUco()
+        self.clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
 
     def detect_patch(self, frame):
         # Find red patch and return contour+length from cv2 image
@@ -26,7 +27,8 @@ class FindPatch():
             warped = warping(frame, rectangle)
             if warped is not None:
 
-                patch = find_length(warped)
+                # patch = KMeansSeg(warped, 2)
+                # patch = find_length(warped)
                 rect, length = find_length(warped)
 
                 if rect is not None:

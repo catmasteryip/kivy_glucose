@@ -13,6 +13,10 @@ def KMeansSeg(bgr, k):
     '''
     hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
     img = hsv[:, :, 1]
+
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    img = clahe.apply(img)
+
     if len(img.shape) > 2:
         vectorized = img.reshape((-1, 3))
     else:
