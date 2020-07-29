@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/cat/Desktop/kivy_glucose/.buildozer/android/platform/build-arm64-v8a/build/other_builds/opencv/arm64-v8a__ndk_target_21/opencv/3rdparty/cpufeatures/cpu-features.c
+cpu-features.h
+/home/cat/Desktop/kivy_glucose/.buildozer/android/platform/build-arm64-v8a/build/other_builds/opencv/arm64-v8a__ndk_target_21/opencv/3rdparty/cpufeatures/cpu-features.h
+dlfcn.h
+-
+errno.h
+-
+fcntl.h
+-
+pthread.h
+-
+stdio.h
+-
+stdlib.h
+-
+sys/system_properties.h
+-
+unistd.h
+-
+
+/home/cat/Desktop/kivy_glucose/.buildozer/android/platform/build-arm64-v8a/build/other_builds/opencv/arm64-v8a__ndk_target_21/opencv/3rdparty/cpufeatures/cpu-features.h
+sys/cdefs.h
+-
+stdint.h
+-
+string.h
+-
+

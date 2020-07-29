@@ -7,35 +7,17 @@ from kivy.uix.camera import Camera
 from kivy.clock import Clock
 import cv2
 import numpy as np
-# import struct
 from kivy.graphics.texture import Texture
 from kivy.uix.image import Image
 from src.conversion import *
 from src.patchdetect import FindPatch
+from android.permissions import request_permissions, Permission
 
-# Builder.load_string('''
-# <CameraClick>:
-#     orientation: 'vertical'
-#     Camera:
-#         index: 0
-#         id: camera
-#         resolution: (640,480)
-#         play: True
-#         allow_stretch: True
-#         canvas.before:
-#             PushMatrix
-#             Rotate:
-#                 angle: -90
-#                 origin: self.center
-#         canvas.after:
-#             PopMatrix
-#     Button:
-#         text: 'Capture'
-#         size_hint_y: None
-#         height: '48dp'
-#         on_press: root.capture()
-
-# ''')
+request_permissions([
+    Permission.CAMERA,
+    Permission.WRITE_EXTERNAL_STORAGE,
+    Permission.READ_EXTERNAL_STORAGE
+])
 
 
 class KivyCam(App):

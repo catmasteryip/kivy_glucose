@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = kivy_glucose
+title = kivyglucose
 
 # (str) Package name
 package.name = kivyglucose
@@ -37,7 +37,7 @@ version = 0.1
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
 #requirements = python3crystax==3.6, kivy, plyer
-requirements = kivy, android, cv2
+requirements = kivy, android, opencv, numpy, opencv-contrib-python
 
 
 # (str) Custom source folders for requirements
@@ -185,7 +185,7 @@ android.permissions = INTERNET, CAMERA, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_ST
 #android.copy_libs = 1
 
 # (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86
-android.arch = armeabi-v7a
+android.arch = arm64-v8a
 
 #
 # Python for android (p4a) specific

@@ -1,8 +1,16 @@
 from kivy.app import App
-from kivy.uix.image import Image
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+from kivy.utils import platform
+from kivy.graphics import PushMatrix, PopMatrix, Rotate
+from kivy.uix.camera import Camera
 from kivy.clock import Clock
-from kivy.graphics.texture import Texture
 import cv2
+import numpy as np
+from kivy.graphics.texture import Texture
+from kivy.uix.image import Image
+from src.conversion import *
+from src.patchdetect import FindPatch
 from android.permissions import request_permissions, Permission
 
 request_permissions([
@@ -12,35 +20,51 @@ request_permissions([
 ])
 
 
-class KivyCamera(Image):
-    def __init__(self, capture, fps, **kwargs):
-        super(KivyCamera, self).__init__(**kwargs)
-        self.capture = capture
-        Clock.schedule_interval(self.update, 1.0 / fps)
+class KivyCam(App):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Clock.schedule_interval(self.update, 0.05)
+        self.kivy_out = Image(allow_stretch=True)
+        self.patchfinder = FindPatch()
+
+    def build(self):
+        box = BoxLayout(orientation='vertical', padding=[10, 10])
+        self.camera = Camera(index=0,
+                             id='camera',
+                             resolution=(640, 480),
+                             play=True,
+                             allow_stretch=True)
+        self.camera.size = self.camera.resolution
+        with self.camera.canvas.before:
+            PushMatrix()
+            # Rotate(
+            #     angle=-90,
+            #     axis=(0, 0, 1)
+            # )
+        with self.camera.canvas.after:
+            PopMatrix()
+        box.add_widget(self.kivy_out)
+        return box
 
     def update(self, dt):
-        ret, frame = self.capture.read()
-        if ret:
-            # convert it to texture
-            buf1 = cv2.flip(frame, 0)
-            buf = buf1.tostring()
-            image_texture = Texture.create(
-                size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
-            image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-            # display image from the texture
-            self.texture = image_texture
+        kivy_image = self.camera.export_as_image()
+
+        # convert kivy image to cv2 ndarray
+        cv_image = kivy_img2cv(kivy_image)
+        # width, height = kivy_image.texture.size
+
+        # patch detection
+        patch_image = self.patchfinder.detect_patch(cv_image)
+
+        # convert cv2 ndarray to kivy image
+        image_texture = cv2kivy_img(patch_image)
+
+        # display image from the texture
+        self.kivy_out.texture = image_texture
+
+    def printlog(self, message):
+        with open('./py_log.txt', 'a') as f:
+            f.write(message+"\n")
 
 
-class CamApp(App):
-    def build(self):
-        self.capture = cv2.VideoCapture(0)
-        self.my_camera = KivyCamera(capture=self.capture, fps=30)
-        return self.my_camera
-
-    def on_stop(self):
-        # without this, app will not exit even if the window is closed
-        self.capture.release()
-
-
-if __name__ == '__main__':
-    CamApp().run()
+KivyCam().run()
